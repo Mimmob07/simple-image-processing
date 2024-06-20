@@ -2,13 +2,13 @@
 
 ## Features
  - Grayscale
- - Reflect^1^
+ - Reflect<sup>1</sup>
  - Blur
- - Edge Detection^2^
+ - Edge Detection<sup>2</sup>
 
-^1^ Reflects the image horizontally
+<sup>1</sup> Reflects the image horizontally
 
-^2^ Uses a sobel operator on all 3 channels for grayscale and color edge detection
+<sup>2</sup> Uses a sobel operator on all 3 channels for grayscale and color edge detection
 
 ## Edge Detection Showcase
 | Before | After |

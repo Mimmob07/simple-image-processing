@@ -10,8 +10,7 @@
 
 <sup>2</sup> Uses a sobel operator on all 3 channels for grayscale and color edge detection
 
-## Building and Running
-### Usage
+## Usage
 ```
 Usage: image-processing --path <PATH> --output-path <OUTPUT_PATH> <COMMAND>
 
@@ -20,6 +19,7 @@ Commands:
   reflect     Reflects the image horizontally
   blur        Sets rgb values to the average of the pixels around it
   edges       Aplies the sobel operator
+  edges-view  Uses a different technique to achieve the same result as edges
   help        Print this message or the help of the given subcommand(s)
 
 Options:
@@ -27,12 +27,16 @@ Options:
   -o, --output-path <OUTPUT_PATH>  
   -h, --help                       Print help
 ```
-### Building
-`$ cargo build --release`
-### Running
-`$ ./target/release/image-processing -p PATH -o OUTPUT_PATH COMMAND`
+
+## Running
+```
+$ cargo build --release
+$ ./target/release/image-processing -p PATH -o OUTPUT_PATH COMMAND
+```
 or
-`$ cargo run -- -p PATH -o OUTPUT_PATH COMMAND`
+```
+$ cargo run --release -- -p PATH -o OUTPUT_PATH COMMAND
+```
 
 ## Edge Detection Showcase
 | Before | After |

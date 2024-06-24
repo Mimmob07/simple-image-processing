@@ -21,6 +21,8 @@ enum Commands {
     Blur,
     /// Aplies the sobel operator
     Edges,
+    /// Uses a different technique to achieve the same result as edges
+    EdgesView,
 }
 
 fn main() {
@@ -117,6 +119,50 @@ fn main() {
                         y,
                         image::Rgb([red_magnitude, green_magnitude, blue_magnitude]),
                     )
+                }
+            }
+        }
+        Commands::EdgesView => {
+            let gradient_x: [Vec<i16>; 3] = [vec![-1, 0, 1], vec![-2, 0, 2], vec![-1, 0, 1]];
+            let gradient_y: [Vec<i16>; 3] = [vec![-1, -2, -1], vec![0; 3], vec![1, 2, 1]];
+
+            let image_copy = img.clone();
+
+            for y in 1..img.height() - 1 {
+                for x in 1..img.width() - 1 {
+                    let [mut gradient_x_red, mut gradient_x_green, mut gradient_x_blue] = [0i32; 3];
+                    let [mut gradient_y_red, mut gradient_y_green, mut gradient_y_blue] = [0i32; 3];
+                    image_copy
+                        .view(x - 1, y - 1, 3, 3)
+                        .pixels()
+                        .for_each(|(tx, ty, pixel)| {
+                            let values = pixel.channels().to_vec();
+                            let tmp_x = tx as usize;
+                            let tmp_y = ty as usize;
+
+                            gradient_x_red += (gradient_x[tmp_x][tmp_y] * values[0] as i16) as i32;
+                            gradient_x_green +=
+                                (gradient_x[tmp_x][tmp_y] * values[1] as i16) as i32;
+                            gradient_x_blue += (gradient_x[tmp_x][tmp_y] * values[2] as i16) as i32;
+
+                            gradient_y_red += (gradient_y[tmp_x][tmp_y] * values[0] as i16) as i32;
+                            gradient_y_green +=
+                                (gradient_y[tmp_x][tmp_y] * values[1] as i16) as i32;
+                            gradient_y_blue += (gradient_y[tmp_x][tmp_y] * values[2] as i16) as i32;
+                        });
+
+                    let red_magnitude =
+                        ((gradient_x_red.pow(2) + gradient_y_red.pow(2)) as f32).sqrt() as u8;
+                    let green_magnitude =
+                        ((gradient_x_green.pow(2) + gradient_y_green.pow(2)) as f32).sqrt() as u8;
+                    let blue_magnitude =
+                        ((gradient_x_blue.pow(2) + gradient_y_blue.pow(2)) as f32).sqrt() as u8;
+
+                    img.put_pixel(
+                        x,
+                        y,
+                        image::Rgb([red_magnitude, green_magnitude, blue_magnitude]),
+                    );
                 }
             }
         }
